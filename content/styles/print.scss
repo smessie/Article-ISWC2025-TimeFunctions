@@ -1,0 +1,24 @@
+@import "ceurart.scss";
+@import "shared.scss";
+@import "shared_override.scss";
+
+header {
+  .actions, .context {
+    display: none;
+  }
+}
+
+.screen-only {
+  display: none;
+}
+
+// Custom css for the figures in the printed version
+.halfwidth {
+  width: 45%;
+  float: left;
+  margin-left: 1em;
+}
+
+.right {
+  float: right;
+}
