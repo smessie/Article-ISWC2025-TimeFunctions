@@ -1,4 +1,4 @@
-# My Scholarly Article
+# It's About Time: Time Functions for Comparing Partial and Floating Time Literals in SPARQL
 
 ## Development mode
 ```
