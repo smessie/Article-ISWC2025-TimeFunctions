@@ -1,7 +1,7 @@
 ## Demo
 {:#demo}
 
-To illustrate the practical utility of the Time Functions, we developed an online demo application, available at [https://smessie.github.io/TimezonelessTimeLiteralsInSparqlDemo/](https://smessie.github.io/TimezonelessTimeLiteralsInSparqlDemo/).
+To illustrate the practical utility of the Time Functions, we developed an online demo application, available at [https://smessie.github.io/TimeFunctions-SPARQL-Editor/](https://smessie.github.io/TimeFunctions-SPARQL-Editor/).
 The application is a lightweight SPARQL query editor that allows users to experiment interactively with the Time Functions described in [](#functions).
 
 Users can write SPARQL queries and immediately view the results, demonstrating how the Time Functions can address limitations in standard SPARQL when comparing partial or floating time literals.
