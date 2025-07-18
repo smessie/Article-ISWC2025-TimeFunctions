@@ -4,20 +4,19 @@
 To address the limitations of SPARQL when dealing with temporal data, particularly the inability to compare partial or floating time literals, we propose a set of SPARQL extension functions called **Time Functions**.
 These functions allow for consistent, meaningful comparison and reasoning over heterogeneous temporal literals by interpreting them as **time intervals**.
 
-The formal specification and accompanying ontology for these functions are available at [https://w3id.org/time-fn/](https://w3id.org/time-fn/) via content negotiation.
+The formal specification and accompanying ontology for these functions are available at [https://w3id.org/time-fn/](https://w3id.org/time-fn/).
 The ontology uses the namespace `https://w3id.org/time-fn/` with the recommended prefix `time-fn:`.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
 The ontology is defined in Turtle using the [Function Ontology (FnO)](cite:cites de2016ontology) to formally describe the semantics, inputs, and outputs of each function.
 FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
 This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own function set using FnO.[^GeoSPARQLFunctions]
-By adopting the same methodology, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.
+By adopting the same method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.
 
 [^GeoSPARQLFunctions]: [https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl](https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl)
 
-
 ### Motivation and Design
 
-The key idea behind Time Functions is to treat all temporal literals as representations of time intervals.
+Time Functions treats all temporal literals as time intervals.
 Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
 For instance, a literal like `"2025-08"^^xsd:gYearMonth` can be understood as spanning from the start of August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to the end of August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
 Floating date-time values, which lack explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
