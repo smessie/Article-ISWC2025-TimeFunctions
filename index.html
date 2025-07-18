@@ -12,7 +12,7 @@
   <meta name="citation_author" content="Julián Rojas Meléndez" />
   <meta name="citation_author" content="Pieter Colpaert" />
   
-  <meta name="citation_publication_date" content="2025/07/17" />
+  <meta name="citation_publication_date" content="2025/07/18" />
 </head>
 
 <body prefix="dctypes: http://purl.org/dc/dcmitype/ pimspace: http://www.w3.org/ns/pim/space# rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ solid: http://www.w3.org/ns/solid/terms# acl: http://www.w3.org/ns/auth/acl# dio: https://w3id.org/dio# lsc: http://linkedscience.org/lsc/ns#" typeof="schema:CreativeWork sioc:Post prov:Entity lsc:Research">
@@ -68,20 +68,21 @@ In addition to providing a technical proposal, we advocate for improved temporal
 <div datatype="rdf:HTML" property="schema:description">
         <h2 property="schema:name">Introduction</h2>
 
-        <p>Temporal data is a common and crucial aspect of datasets on the Semantic Web.
+        <p>Temporal literals are common in datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to <em>partial time literals</em> (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, <code>xsd:date</code>) and <em>floating times</em> (i.e., time literals without explicit time zones).</p>
 
-        <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">RDF 1.2</a> <span class="references">[<a href="#ref-1">1</a>]</span> supports various XML Schema temporal datatypes, including <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>, The <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">SPARQL 1.1 Query Language specification</a> <span class="references">[<a href="#ref-2">2</a>]</span> defines comparison semantics only for literals of the same datatype.
-Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.</p>
+        <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">RDF 1.2</a> <span class="references">[<a href="#ref-1">1</a>]</span> supports various XML Schema temporal datatypes, including <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>, the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">SPARQL 1.1 Query Language specification</a> <span class="references">[<a href="#ref-2">2</a>]</span> defines comparison semantics only for literals of the same datatype.</p>
+        <font color="red">Comment by Pieter: why not refer to the operator mappings in SPARQL 1.2 here? https://www.w3.org/TR/sparql12-query/#OperatorMapping</font>
+        <p>Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.</p>
 
         <p>This issue becomes particularly problematic in large-scale, real-world knowledge graphs such as Wikidata.
 Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified <code>xsd:dateTime</code> values, without any indication of their original precision.
 For example, a historical event entered as <code>27th century BCE</code> may be displayed as such in the user interface, but is internally represented and queryable only as <code>"−2650-01-01T00:00:00Z"^^xsd:dateTime</code>.
-This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results.</p>
+This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.</p>
 
         <p>Another critical challenge arises with <em>floating times</em>, which are time literals that lack time zone information.
-A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context or adjusted to the user’s local time zone, e.g., as UTC (Z) or +02:00 for CEST.
+A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context, or may be wrongly adjusted to the user’s local time zone.
 This ambiguity makes consistent comparison and sorting unreliable.
 While the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">W3C Group Draft Note on Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span> recommends treating such floating times as UTC by default, this approach is insufficient in the open and distributed context of the Semantic Web, where data originates from diverse sources with potentially different implicit time zone assumptions.
 As discussed in the GitHub issue regarding implicit time zones in SPARQL<sup id="fnref:IssueImplicitTimeZoneComparisonSorting"><a href="#fn:IssueImplicitTimeZoneComparisonSorting" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>, it is problematic to consider floating times from different sources as equal because they can represent different time instants and thus have different implicit time zones.</p>
