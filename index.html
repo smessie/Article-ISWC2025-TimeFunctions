@@ -68,21 +68,20 @@ In addition to providing a technical proposal, we advocate for improved temporal
 <div datatype="rdf:HTML" property="schema:description">
         <h2 property="schema:name">Introduction</h2>
 
-        <p>Temporal literals are common in datasets on the Semantic Web.
+        <p>Temporal data is a common and crucial aspect of datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to <em>partial time literals</em> (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, <code>xsd:date</code>) and <em>floating times</em> (i.e., time literals without explicit time zones).</p>
 
-        <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">RDF 1.2</a> <span class="references">[<a href="#ref-1">1</a>]</span> supports various XML Schema temporal datatypes, including <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>, the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">SPARQL 1.1 Query Language specification</a> <span class="references">[<a href="#ref-2">2</a>]</span> defines comparison semantics only for literals of the same datatype.</p>
-        <font color="red">Comment by Pieter: why not refer to the operator mappings in SPARQL 1.2 here? https://www.w3.org/TR/sparql12-query/#OperatorMapping</font>
-        <p>Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.</p>
+        <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">RDF 1.2</a> <span class="references">[<a href="#ref-1">1</a>]</span> supports various XML Schema temporal datatypes, including <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>, The <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">SPARQL 1.1 Query Language specification</a> <span class="references">[<a href="#ref-2">2</a>]</span> defines comparison semantics only for literals of the same datatype.
+Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.</p>
 
         <p>This issue becomes particularly problematic in large-scale, real-world knowledge graphs such as Wikidata.
 Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified <code>xsd:dateTime</code> values, without any indication of their original precision.
 For example, a historical event entered as <code>27th century BCE</code> may be displayed as such in the user interface, but is internally represented and queryable only as <code>"−2650-01-01T00:00:00Z"^^xsd:dateTime</code>.
-This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.</p>
+This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results.</p>
 
         <p>Another critical challenge arises with <em>floating times</em>, which are time literals that lack time zone information.
-A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context, or may be wrongly adjusted to the user’s local time zone.
+A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context or adjusted to the user’s local time zone, e.g., as UTC (Z) or +02:00 for CEST.
 This ambiguity makes consistent comparison and sorting unreliable.
 While the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">W3C Group Draft Note on Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span> recommends treating such floating times as UTC by default, this approach is insufficient in the open and distributed context of the Semantic Web, where data originates from diverse sources with potentially different implicit time zone assumptions.
 As discussed in the GitHub issue regarding implicit time zones in SPARQL<sup id="fnref:IssueImplicitTimeZoneComparisonSorting"><a href="#fn:IssueImplicitTimeZoneComparisonSorting" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>, it is problematic to consider floating times from different sources as equal because they can represent different time instants and thus have different implicit time zones.</p>
@@ -112,17 +111,17 @@ Finally, Section 4 concludes with a discussion of how Time Functions address the
         <p>To address the limitations of SPARQL when dealing with temporal data, particularly the inability to compare partial or floating time literals, we propose a set of SPARQL extension functions called <strong>Time Functions</strong>.
 These functions allow for consistent, meaningful comparison and reasoning over heterogeneous temporal literals by interpreting them as <strong>time intervals</strong>.</p>
 
-        <p>The formal specification and accompanying ontology for these functions are available at <a href="https://w3id.org/time-fn/">https:/​/​w3id.org/time-fn/</a> via content negotiation.
+        <p>The formal specification and accompanying ontology for these functions are available at <a href="https://w3id.org/time-fn/">https:/​/​w3id.org/time-fn/</a>.
 The ontology uses the namespace <code>https:/​/​w3id.org/time-fn/</code> with the recommended prefix <code>time-fn:</code>.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
 The ontology is defined in Turtle using the Function Ontology (FnO) <span class="references">[<a href="#ref-6">6</a>]</span> to formally describe the semantics, inputs, and outputs of each function.
 FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
 This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own function set using FnO.<sup id="fnref:GeoSPARQLFunctions"><a href="#fn:GeoSPARQLFunctions" class="footnote" rel="footnote" role="doc-noteref">3</a></sup>
-By adopting the same methodology, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.</p>
+By adopting the same method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.</p>
 
         <h3 id="motivation-and-design">Motivation and Design</h3>
 
-        <p>The key idea behind Time Functions is to treat all temporal literals as representations of time intervals.
+        <p>Time Functions treats all temporal literals as time intervals.
 Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
 For instance, a literal like <code>"2025-08"^^xsd:gYearMonth</code> can be understood as spanning from the start of August 1st (<code>"2025-08-01T00:00:00-14:00"^^xsd:dateTime</code>) to the end of August 31st (<code>"2025-08-31T23:59:59+14:00"^^xsd:dateTime</code>).
 Floating date-time values, which lack explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">W3C Recommendation</a> <span class="references">[<a href="#ref-4">4</a>]</span> to consider the full ±14:00 hour range, rather than a fixed default like UTC.</p>
