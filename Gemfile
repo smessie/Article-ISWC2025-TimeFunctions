@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'nanoc', '~> 4.7'
 
+gem 'csv' # To avoid warning on Ruby 3.4+
+
 gem 'scholarmarkdown'
 
 # text processing

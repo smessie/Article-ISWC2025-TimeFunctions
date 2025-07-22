@@ -34,6 +34,7 @@ GEM
       time (< 1.0)
     csl-styles (2.0.1)
       csl (~> 2.0)
+    csv (3.3.4)
     date (3.4.1)
     ddmetrics (1.1.0)
     ddplugin (1.0.3)
@@ -228,6 +229,7 @@ PLATFORMS
 DEPENDENCIES
   citeproc-ruby (>= 1.1.6)
   csl-styles
+  csv
   guard-livereload
   guard-nanoc (~> 2.1.2)
   guard-rack
