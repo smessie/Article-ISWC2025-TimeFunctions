@@ -4,8 +4,8 @@
 To address the limitations of SPARQL when dealing with temporal data, particularly the inability to compare partial or floating time literals, we propose a set of SPARQL extension functions called **Time Functions**.
 These functions allow for consistent, meaningful comparison and reasoning over heterogeneous temporal literals by interpreting them as **time intervals**.
 
-The formal specification and accompanying ontology for these functions are available at [https://w3id.org/time-fn/](https://w3id.org/time-fn/).
-The ontology uses the namespace `https://w3id.org/time-fn/` with the recommended prefix `time-fn:`.
+The formal specification and accompanying ontology for these functions are available at [https://w3id.org/time-fn](https://w3id.org/time-fn).
+The ontology uses the namespace `https://w3id.org/time-fn#` with the recommended prefix `tfn:`.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
 The ontology relies on the [Function Ontology (FnO)](cite:cites de2016ontology) to formally describe the semantics, inputs, and outputs of each function.
 FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
@@ -28,11 +28,11 @@ By shifting from point-based to interval-based reasoning, these functions enable
 
 The current Time Functions include five core functions:
 
-- **time-fn:periodMinInclusive(?timeLiteral)**: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an `xsd:dateTime`. For example, for `"2025-08"^^xsd:gYearMonth`, it returns `"2025-08-01T00:00:00.000+14:00"^^xsd:dateTime`.
-- **time-fn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns `"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime`.
-- **time-fn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns `"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime`.
-- **time-fn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period. For the same example, it returns `"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime`.
-- **time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating `xsd:dateTime` literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns `"2025-08+02:00"^^xsd:gYearMonth` when bound to the `+02:00` time zone.
+- **tfn:periodMinInclusive(?timeLiteral)**: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an `xsd:dateTime`. For example, for `"2025-08"^^xsd:gYearMonth`, it returns `"2025-08-01T00:00:00.000+14:00"^^xsd:dateTime`.
+- **tfn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns `"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime`.
+- **tfn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns `"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime`.
+- **tfn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period. For the same example, it returns `"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime`.
+- **tfn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating `xsd:dateTime` literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns `"2025-08+02:00"^^xsd:gYearMonth` when bound to the `+02:00` time zone.
 The function aligns with the approach proposed in [Working with Time and Timezones](cite:cites phillips_working_2024), which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
@@ -46,6 +46,9 @@ An example of such a query is included in the demo application, showcasing how d
 The Time Functions are applicable in a wide range of practical scenarios. When comparing dates of different data types, such as matching an `xsd:dateTime` with an `xsd:date`, the functions allow both values to be interpreted as intervals and compared accordingly.
 This is particularly useful in knowledge graphs where schema constraints are loose and data often lacks uniform temporal granularity.
 
-Floating time literals pose challenges in distributed and heterogeneous datasets. Without a defined time zone, their interpretation is ambiguous, which can lead to incorrect comparisons or missed matches. Time Functions make it possible to consistently bind a default time zone where appropriate or interpret the literal as an interval that spans all possible time zones, depending on the application's needs.
+Floating time literals pose challenges in distributed and heterogeneous datasets. Without a defined time zone, their interpretation is ambiguous, which can lead to incorrect comparisons or missed matches.
+Time Functions make it possible to consistently bind a default time zone where appropriate or interpret the literal as an interval that spans all possible time zones, depending on the application's needs.
 
-These functions also support more advanced temporal logic, such as detecting overlaps between time periods, validating temporal boundaries, and improving sorting behavior. In knowledge graphs like Wikidata, where date precision is user-defined but not preserved in SPARQL query results, Time Functions allow users to reconstruct and reason about the intended temporal scope of such data. More generally, they provide a principled foundation for integrating diverse temporal representations in SPARQL queries, enabling more accurate and expressive querying of temporal knowledge.
+These functions also support more advanced temporal logic, such as detecting overlaps between time periods, validating temporal boundaries, and improving sorting behavior.
+In knowledge graphs like Wikidata, where date precision is user-defined but not preserved in SPARQL query results, Time Functions allow users to reconstruct and reason about the intended temporal scope of such data.
+More generally, they provide a principled foundation for integrating diverse temporal representations in SPARQL queries, enabling more accurate and expressive querying of temporal knowledge.

@@ -14,7 +14,7 @@ The query interface itself is powered by the open-source YASQE editor[^Yasqe], w
 <figure class="screen-only">
  <iframe src="https://smessie.github.io/TimeFunctions-SPARQL-Editor/" style="width: 100%; height: 95vh;"></iframe>
  <figcaption markdown="block">
- Demo app with example SPARQL queries that demonstrate the use of the proposed Time Functions.
+ **Fig. 1:** Demo app with example SPARQL queries that demonstrate the use of the proposed Time Functions.
  </figcaption>
 </figure>
 
@@ -34,8 +34,18 @@ The query interface itself is powered by the open-source YASQE editor[^Yasqe], w
 
 
 The application includes example queries that highlight common pitfalls when working with time literals in SPARQL, as well as how the Time Functions can be used to resolve them.
-Figure 1 shows a screenshot of the demo with a query that compares an `xsd:date` to an `xsd:dateTime`.
+<span class="printonly">
+[](#fig:default-query) shows a screenshot of the demo with a query that compares an `xsd:date` to an `xsd:dateTime`.
+</span>
+<span class="screen-only">
+Fig. 1 includes a demo with a query "Publications at Bob Evnen's birthdate" that compares an `xsd:date` to an `xsd:dateTime`.
+</span>
 Since SPARQL does not support comparisons between these types, the query yields no results—even though the date components are logically comparable.
-In Figure 2, the same query is rewritten using the Time Functions to map both literals to their corresponding time intervals.
+<span class="printonly">
+In [](#fig:rewritten-query), the same query is rewritten using the Time Functions to map both literals to their corresponding time intervals.
+</span>
+<span class="screen-only">
+Clicking the button again rewrites the query using Time Functions to map both literals to their corresponding time intervals.
+</span>
 This allows for a meaningful comparison, and the query returns the expected result.
 
