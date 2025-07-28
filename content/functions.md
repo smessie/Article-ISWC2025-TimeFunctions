@@ -28,11 +28,11 @@ By shifting from point-based to interval-based reasoning, these functions enable
 
 The current Time Functions include five core functions:
 
-- **time-fn:periodMinInclusive(?timeLiteral)**: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an `xsd:dateTime`.
-- **time-fn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal.
-- **time-fn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic.
-- **time-fn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period.
-- **time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating `xsd:dateTime` literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
+- **time-fn:periodMinInclusive(?timeLiteral)**: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an `xsd:dateTime`. For example, for `"2025-08"^^xsd:gYearMonth`, it returns `"2025-08-01T00:00:00.000+14:00"^^xsd:dateTime`.
+- **time-fn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns `"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime`.
+- **time-fn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns `"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime`.
+- **time-fn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period. For the same example, it returns `"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime`.
+- **time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating `xsd:dateTime` literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns `"2025-08+02:00"^^xsd:gYearMonth` when bound to the `+02:00` time zone.
 The function aligns with the approach proposed in [Working with Time and Timezones](cite:cites phillips_working_2024), which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
