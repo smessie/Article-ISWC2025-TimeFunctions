@@ -8,17 +8,16 @@ The formal specification and accompanying ontology for these functions are avail
 The ontology uses the namespace `https://w3id.org/time-fn#` with the recommended prefix `tfn:`.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
 The ontology relies on the [Function Ontology (FnO)](cite:cites de2016ontology) to formally describe the semantics, inputs, and outputs of each function.
-FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
-This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own extension function set using FnO[^GeoSPARQLFunctions].
-By adopting the same method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.
+FnO provides a reusable and machine-readable vocabulary for specifying function metadata, well-suited for describing SPARQL extension functions.
+This approach aligns with Semantic Web best practices and mirrors GeoSPARQL’s extension function set defined using FnO[^GeoSPARQLFunctions].
+By adopting this method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.
 
 [^GeoSPARQLFunctions]: [https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl](https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl)
 
 ### Motivation and Design
 
-Time Functions treats all temporal literals as time intervals.
-Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
-For instance, a literal like `"2025-08"^^xsd:gYearMonth` can be understood as spanning from the start of August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to the end of August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
+Time Functions treats all temporal literals as time intervals, interpreted as the range of time they could represent based on their earliest and latest possible interpretations. 
+For instance, a literal `"2025-08"^^xsd:gYearMonth` spans from August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
 Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C XML Schema Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
 
 By shifting from point-based to interval-based reasoning, these functions enable meaningful comparisons across data types, handle ambiguities introduced by missing time zones or precision, and make temporal filtering in SPARQL more reliable and consistent.
@@ -46,7 +45,7 @@ An example of such a query is included in the demo application, showcasing how d
 The Time Functions are applicable in a wide range of practical scenarios. When comparing dates of different data types, such as matching an `xsd:dateTime` with an `xsd:date`, the functions allow both values to be interpreted as intervals and compared accordingly.
 This is particularly useful in knowledge graphs where schema constraints are loose and data often lacks uniform temporal granularity.
 
-Floating time literals pose challenges in distributed and heterogeneous datasets. Without a defined time zone, their interpretation is ambiguous, which can lead to incorrect comparisons or missed matches.
+Floating time literals pose challenges in distributed and heterogeneous datasets. Without a defined time zone, their interpretation is ambiguous, leading to incorrect comparisons or missed matches.
 Time Functions make it possible to consistently bind a default time zone where appropriate or interpret the literal as an interval that spans all possible time zones, depending on the application's needs.
 
 These functions also support more advanced temporal logic, such as detecting overlaps between time periods, validating temporal boundaries, and improving sorting behavior.

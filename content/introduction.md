@@ -8,10 +8,10 @@ However, current support for comparing and reasoning over time-related literals 
 Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same data type.
 Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.
 
-This issue becomes problematic in large-scale, real-world knowledge graphs such as Wikidata.
-Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified `xsd:dateTime` values, without any indication of their original precision.
-For example, a historical event entered as `27th century BCE` may be displayed as such in the user interface, but is internally represented and queryable only as `"−2650-01-01T00:00:00Z"^^xsd:dateTime`.
-This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.
+This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
+Its SPARQL endpoint, however, returns fully qualified `xsd:dateTime` values without indicating the original precision.
+For example, a historical event entered as `27th century BCE` may appear as such in the user interface, but is internally represented and queryable only as `"−2650-01-01T00:00:00Z"^^xsd:dateTime`.
+This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, such as asserting that this historical event happened in the month of January.
 
 Another critical challenge arises with *floating times*, which are time literals that lack time zone information.
 A literal like `"2025-08-01T12:00:00"^^xsd:dateTime` can be interpreted differently depending on the context, or may be wrongly adjusted to the user’s local time zone.
