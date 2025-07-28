@@ -1,14 +1,14 @@
 ## Introduction
 {:#introduction}
 
-Temporal literals are common in datasets on the Semantic Web.
+Temporal literals are common in many datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to *partial time literals* (e.g., `xsd:gYear`, `xsd:gYearMonth`, `xsd:date`) and *floating times* (i.e., time literals without explicit time zones).
 
-Although [RDF 1.1](cite:cites cyganiak_rdf_2014) supports various XML Schema temporal datatypes, including `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`, the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same datatype.
-Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.
+Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same data type.
+Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.
 
-This issue becomes particularly problematic in large-scale, real-world knowledge graphs such as Wikidata.
+This issue becomes problematic in large-scale, real-world knowledge graphs such as Wikidata.
 Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified `xsd:dateTime` values, without any indication of their original precision.
 For example, a historical event entered as `27th century BCE` may be displayed as such in the user interface, but is internally represented and queryable only as `"−2650-01-01T00:00:00Z"^^xsd:dateTime`.
 This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.
@@ -26,7 +26,7 @@ For example, a floating time can be represented by the time interval it could oc
 This perspective enables meaningful comparison between floating, partial, and fully-qualified time literals by aligning them to their temporal bounds rather than requiring exact matches.
 
 Despite the growing interest in temporal reasoning on knowledge graphs, e.g., in works such as [Soulard et al. 2025](cite:cites soulard2025explainable), issues around time zones and floating times are rarely addressed explicitly.
-Moreover, while proposals like SPARQL Enhancement Proposal SEP-0002[^SEP-0002] improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.
+Moreover, while improvement proposals like SEP-0002[^SEP-0002] improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.
 
 [^SEP-0002]: [https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md](https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md)
 

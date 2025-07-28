@@ -7,9 +7,9 @@ These functions allow for consistent, meaningful comparison and reasoning over h
 The formal specification and accompanying ontology for these functions are available at [https://w3id.org/time-fn/](https://w3id.org/time-fn/).
 The ontology uses the namespace `https://w3id.org/time-fn/` with the recommended prefix `time-fn:`.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
-The ontology is defined in Turtle using the [Function Ontology (FnO)](cite:cites de2016ontology) to formally describe the semantics, inputs, and outputs of each function.
+The ontology relies on the [Function Ontology (FnO)](cite:cites de2016ontology) to formally describe the semantics, inputs, and outputs of each function.
 FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
-This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own function set using FnO.[^GeoSPARQLFunctions]
+This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own extension function set using FnO[^GeoSPARQLFunctions].
 By adopting the same method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.
 
 [^GeoSPARQLFunctions]: [https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl](https://github.com/opengeospatial/ogc-geosparql/blob/master/vocabularies/functions.ttl)
@@ -19,7 +19,7 @@ By adopting the same method, the Time Functions can be consistently documented, 
 Time Functions treats all temporal literals as time intervals.
 Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
 For instance, a literal like `"2025-08"^^xsd:gYearMonth` can be understood as spanning from the start of August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to the end of August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
-Floating date-time values, which lack explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
+Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C XML Schema Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
 
 By shifting from point-based to interval-based reasoning, these functions enable meaningful comparisons across data types, handle ambiguities introduced by missing time zones or precision, and make temporal filtering in SPARQL more reliable and consistent.
 
@@ -32,12 +32,13 @@ The current Time Functions include five core functions:
 - **time-fn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal.
 - **time-fn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic.
 - **time-fn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period.
-- **time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given `xsd:dateTime` literal without a time zone (i.e., a floating time), this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
+- **time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating `xsd:dateTime` literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
 The function aligns with the approach proposed in [Working with Time and Timezones](cite:cites phillips_working_2024), which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
 Nevertheless, the function enables binding a default time zone retrieved dynamically from the dataset itself.
 For example, a SERVICE clause may be used to ensure that the time zone is sourced from the same dataset or endpoint as the time literal, preserving consistency within federated queries.
+An example of such a query is included in the demo application, showcasing how default time zones can be retrieved and applied dynamically based on the queried data source.
 
 
 ### Use Cases
