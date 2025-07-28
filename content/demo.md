@@ -5,13 +5,14 @@ To illustrate the practical utility of the Time Functions, we developed an onlin
 The application is a lightweight SPARQL query editor that allows users to experiment interactively with the Time Functions described in [](#functions).
 
 Users can write and execute SPARQL queries, demonstrating how the Time Functions can address limitations in standard SPARQL when comparing partial or floating time literals.
-Under the hood, the demo runs on the [Comunica query engine](cite:cites taelman_iswc_resources_comunica_2018), which has been extended <span style="color: red">JR: Can we add a link to the source code of this extension?</span> to support these custom SPARQL extension functions.
+Under the hood, the demo runs on the [Comunica query engine](cite:cites taelman_iswc_resources_comunica_2018), which has been extended[^extensionImplementation] to support these custom SPARQL extension functions.
 The query interface itself is powered by the open-source YASQE editor[^Yasqe], which offers features such as syntax highlighting and autocompletion.
 
+[^extensionImplementation]: [https://github.com/smessie/TimeFunctions-SPARQL-Editor/blob/main/src/assets/queryWorker.ts](https://github.com/smessie/TimeFunctions-SPARQL-Editor/blob/main/src/assets/queryWorker.ts)
 [^Yasqe]: [https://docs.triply.cc/yasgui-api/#yasqe](https://docs.triply.cc/yasgui-api/#yasqe)
 
 <figure class="screen-only">
- <iframe src="https://smessie.github.io/TimeFunctions-SPARQL-Editor/" style="width: 100%; height: 100vh;"></iframe>
+ <iframe src="https://smessie.github.io/TimeFunctions-SPARQL-Editor/" style="width: 100%; height: 95vh;"></iframe>
  <figcaption markdown="block">
  Demo app with example SPARQL queries that demonstrate the use of the proposed Time Functions.
  </figcaption>
@@ -36,5 +37,5 @@ The application includes example queries that highlight common pitfalls when wor
 Figure 1 shows a screenshot of the demo with a query that compares an `xsd:date` to an `xsd:dateTime`.
 Since SPARQL does not support comparisons between these types, the query yields no results—even though the date components are logically comparable.
 In Figure 2, the same query is rewritten using the Time Functions to map both literals to their corresponding time intervals.
-This allows for a meaningful comparison, and the query returns the expected result. <span style="color: red">JR: The demo implementation has 2 predefined queries: 1 reflecting the query in Figure 1 and another query to Wikidata for athlets' birthdays that does not use the time functions. Can we add at least the example shown in Figure 2 as a predefined query? Ideally, we could have an example of each of the use cases mentioned in section 2.3. (I tried to add them myself but the repo seems to be private)</span>
+This allows for a meaningful comparison, and the query returns the expected result.
 

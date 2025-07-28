@@ -1,7 +1,8 @@
 ## Conclusion
 {:#conclusion}
 
-In this paper we have highlighted an important gap in the current processing of SPARQL queries dealing with temporal data, that include the inability to directly compare logically comparable datatypes such as `xsd:date` and `xsd:dateTime`; and potential ambiguity when dealing with floating time literal, especially in federated or heterogeneous data settings.
+In this paper, we have highlighted an important gap in the current processing of SPARQL queries dealing with temporal data.
+This gap includes the inability to directly compare logically comparable data types such as `xsd:date` and `xsd:dateTime`, as well as potential ambiguity when dealing with floating time literals, especially in federated or heterogeneous data settings.
 Moreover, current data modeling practices further complicate temporal reasoning: for instance, Wikidata represents imprecise time periods such as “27th century BCE” using a single `xsd:dateTime` literal (e.g., "-2650-01-01T00:00:00Z"), thereby flattening a broad time range into a misleading instant.
 These challenges highlight a broader need for improved temporal data publishing practices: data should be expressed using accurate data types that reflect temporal granularity, and time zones should be made explicit wherever possible to avoid implicit and potentially conflicting assumptions.
 

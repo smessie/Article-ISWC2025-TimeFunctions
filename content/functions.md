@@ -16,7 +16,7 @@ By adopting the same method, the Time Functions can be consistently documented, 
 
 ### Motivation and Design
 
-Time Functions treats all partial and floating temporal literals as time intervals.
+Time Functions treats all temporal literals as time intervals.
 Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
 For instance, a literal like `"2025-08"^^xsd:gYearMonth` can be understood as spanning from the start of August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to the end of August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
 Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C XML Schema Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
@@ -37,7 +37,8 @@ The function aligns with the approach proposed in [Working with Time and Timezon
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
 Nevertheless, the function enables binding a default time zone retrieved dynamically from the dataset itself.
-For example, a SERVICE clause may be used to ensure that the time zone is sourced from the same dataset or endpoint as the time literal, preserving consistency within federated queries. <span style="color: red">JR: This last paragraph is not very clear to me. How do you dynamically retrieve the default timezone from the dataset? Also, do you mean that one can selectively apply the default timezone function using the SERVICE clause? In any case, maybe it is a good idea to showcase this the demo below?</span>
+For example, a SERVICE clause may be used to ensure that the time zone is sourced from the same dataset or endpoint as the time literal, preserving consistency within federated queries.
+An example of such a query is included in the demo application, showcasing how default time zones can be retrieved and applied dynamically based on the queried data source.
 
 
 ### Use Cases
