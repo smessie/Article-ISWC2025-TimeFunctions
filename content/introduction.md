@@ -1,11 +1,11 @@
 ## Introduction
 {:#introduction}
 
-Temporal data is a common and crucial aspect of many datasets on the Semantic Web.
+Temporal literals are common in many datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to *partial time literals* (e.g., `xsd:gYear`, `xsd:gYearMonth`, `xsd:date`) and *floating times* (i.e., time literals without explicit time zones).
 
-Although the RDF 1.1 standard[^rdf11] recommends the use of various built-in XML Schema temporal datatypes (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), The [SPARQL 1.1 Query Language specification](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same datatype.
+Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal datatypes (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same datatype.
 Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.
 
 [^rdf11]: [https://www.w3.org/TR/rdf11-concepts/](https://www.w3.org/TR/rdf11-concepts/)
@@ -13,10 +13,10 @@ Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`
 This issue becomes problematic in large-scale, real-world knowledge graphs such as Wikidata.
 Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified `xsd:dateTime` values, without any indication of their original precision.
 For example, a historical event entered as `27th century BCE` may be displayed as such in the user interface, but is internally represented and queryable only as `"−2650-01-01T00:00:00Z"^^xsd:dateTime`.
-This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results.
+This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.
 
 Another critical challenge arises with *floating times*, which are time literals that lack time zone information.
-A literal like `"2025-08-01T12:00:00"^^xsd:dateTime` can be interpreted differently depending on the context or adjusted to the user’s local time zone, e.g., as UTC (Z) or +02:00 for CEST.
+A literal like `"2025-08-01T12:00:00"^^xsd:dateTime` can be interpreted differently depending on the context, or may be wrongly adjusted to the user’s local time zone.
 This ambiguity makes consistent comparison and sorting unreliable.
 While the [W3C Group Draft Note on Working with Time and Timezones](cite:cites phillips_working_2024) recommends treating such floating times as UTC by default, this approach is insufficient in the open and distributed context of the Semantic Web, where data originates from diverse sources with potentially different implicit time zone assumptions.
 As discussed in the GitHub issue regarding implicit time zones in SPARQL[^IssueImplicitTimeZoneComparisonSorting], it is problematic to consider floating times from different sources as equal because they can represent different time instants and thus have different implicit time zones.
