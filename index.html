@@ -12,7 +12,7 @@
   <meta name="citation_author" content="Julián Rojas Meléndez" />
   <meta name="citation_author" content="Pieter Colpaert" />
   
-  <meta name="citation_publication_date" content="2025/07/22" />
+  <meta name="citation_publication_date" content="2025/07/28" />
 </head>
 
 <body prefix="dctypes: http://purl.org/dc/dcmitype/ pimspace: http://www.w3.org/ns/pim/space# rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ solid: http://www.w3.org/ns/solid/terms# acl: http://www.w3.org/ns/auth/acl# dio: https://w3id.org/dio# lsc: http://linkedscience.org/lsc/ns#" typeof="schema:CreativeWork sioc:Post prov:Entity lsc:Research">
@@ -68,30 +68,30 @@ In addition to providing a technical proposal, we advocate for improved temporal
 <div datatype="rdf:HTML" property="schema:description">
         <h2 property="schema:name">Introduction</h2>
 
-        <p>Temporal data is a common and crucial aspect of many datasets on the Semantic Web.
+        <p>Temporal literals are common in datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to <em>partial time literals</em> (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, <code>xsd:date</code>) and <em>floating times</em> (i.e., time literals without explicit time zones).</p>
 
-        <p>Although the RDF 1.1 standard<sup id="fnref:rdf11"><a href="#fn:rdf11" class="footnote" rel="footnote" role="doc-noteref">1</a></sup> recommends the use of various built-in XML Schema temporal datatypes (e.g., <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>), The <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">SPARQL 1.1 Query Language specification</a> <span class="references">[<a href="#ref-1">1</a>]</span> defines comparison semantics only for literals of the same datatype.
-Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.</p>
+        <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">RDF 1.1</a> <span class="references">[<a href="#ref-1">1</a>]</span> supports various XML Schema temporal datatypes, including <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>, the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping">operator mappings from SPARQL 1.1</a> <span class="references">[<a href="#ref-2">2</a>]</span> defines comparison semantics only for literals of the same datatype.
+Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically equivalent.</p>
 
-        <p>This issue becomes problematic in large-scale, real-world knowledge graphs such as Wikidata.
+        <p>This issue becomes particularly problematic in large-scale, real-world knowledge graphs such as Wikidata.
 Although Wikidata allows users to specify a precision level (e.g., century, year, month) when entering dates, its SPARQL endpoint returns fully qualified <code>xsd:dateTime</code> values, without any indication of their original precision.
 For example, a historical event entered as <code>27th century BCE</code> may be displayed as such in the user interface, but is internally represented and queryable only as <code>"−2650-01-01T00:00:00Z"^^xsd:dateTime</code>.
-This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results.</p>
+This loss of precision in the queryable data undermines temporal reasoning and can produce misleading query results, for example by asserting that this historical event happened in the month of January.</p>
 
         <p>Another critical challenge arises with <em>floating times</em>, which are time literals that lack time zone information.
-A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context or adjusted to the user’s local time zone, e.g., as UTC (Z) or +02:00 for CEST.
+A literal like <code>"2025-08-01T12:00:00"^^xsd:dateTime</code> can be interpreted differently depending on the context, or may be wrongly adjusted to the user’s local time zone.
 This ambiguity makes consistent comparison and sorting unreliable.
-While the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">W3C Group Draft Note on Working with Time and Timezones</a> <span class="references">[<a href="#ref-2">2</a>]</span> recommends treating such floating times as UTC by default, this approach is insufficient in the open and distributed context of the Semantic Web, where data originates from diverse sources with potentially different implicit time zone assumptions.
-As discussed in the GitHub issue regarding implicit time zones in SPARQL<sup id="fnref:IssueImplicitTimeZoneComparisonSorting"><a href="#fn:IssueImplicitTimeZoneComparisonSorting" class="footnote" rel="footnote" role="doc-noteref">2</a></sup>, it is problematic to consider floating times from different sources as equal because they can represent different time instants and thus have different implicit time zones.</p>
+While the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">W3C Group Draft Note on Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span> recommends treating such floating times as UTC by default, this approach is insufficient in the open and distributed context of the Semantic Web, where data originates from diverse sources with potentially different implicit time zone assumptions.
+As discussed in the GitHub issue regarding implicit time zones in SPARQL<sup id="fnref:IssueImplicitTimeZoneComparisonSorting"><a href="#fn:IssueImplicitTimeZoneComparisonSorting" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>, it is problematic to consider floating times from different sources as equal because they can represent different time instants and thus have different implicit time zones.</p>
 
         <p>A more robust approach is to treat all temporal literals—particularly floating and partial ones—as time intervals, bounded by their earliest and latest possible interpretations.
-For example, a floating time can be represented by the time interval it could occupy across the full range of legal time zone offsets (−14:00 to +14:00, as per <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">XML Schema Part 2: Datatypes Second Edition</a> <span class="references">[<a href="#ref-3">3</a>]</span>).
+For example, a floating time can be represented by the time interval it could occupy across the full range of legal time zone offsets (−14:00 to +14:00, as per <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">XML Schema Part 2: Datatypes Second Edition</a> <span class="references">[<a href="#ref-4">4</a>]</span>).
 This perspective enables meaningful comparison between floating, partial, and fully-qualified time literals by aligning them to their temporal bounds rather than requiring exact matches.</p>
 
-        <p>Despite the growing interest in temporal reasoning on knowledge graphs, e.g., in works such as Soulard et al. 2025 <span class="references">[<a href="#ref-4">4</a>]</span>, issues around time zones and floating times are rarely addressed explicitly.
-Moreover, while improvement proposals like SEP-0002<sup id="fnref:SEP-0002"><a href="#fn:SEP-0002" class="footnote" rel="footnote" role="doc-noteref">3</a></sup> improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.</p>
+        <p>Despite the growing interest in temporal reasoning on knowledge graphs, e.g., in works such as Soulard et al. 2025 <span class="references">[<a href="#ref-5">5</a>]</span>, issues around time zones and floating times are rarely addressed explicitly.
+Moreover, while proposals like SPARQL Enhancement Proposal SEP-0002<sup id="fnref:SEP-0002"><a href="#fn:SEP-0002" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.</p>
 
         <p>This paper aims to highlight these overlooked issues and present a concrete, extensible solution.
 We propose a set of SPARQL extension functions—called <em>Time Functions</em>—that enable comparison across different temporal data types, interpretation of floating and partial times as intervals, and consistent and explainable time-based filtering and sorting.</p>
@@ -111,20 +111,20 @@ Finally, Section 4 concludes with a discussion of how Time Functions address the
         <p>To address the limitations of SPARQL when dealing with temporal data, particularly the inability to compare partial or floating time literals, we propose a set of SPARQL extension functions called <strong>Time Functions</strong>.
 These functions allow for consistent, meaningful comparison and reasoning over heterogeneous temporal literals by interpreting them as <strong>time intervals</strong>.</p>
 
-        <p>The formal specification and accompanying ontology for these functions are available at <a href="https://w3id.org/time-fn/">https:/​/​w3id.org/time-fn/</a>.
+        <p>The formal specification and accompanying ontology for these functions are available at <a href="https://w3id.org/time-fn/">https:/​/​w3id.org/time-fn/</a> via content negotiation.
 The ontology uses the namespace <code>https:/​/​w3id.org/time-fn/</code> with the recommended prefix <code>time-fn:</code>.
 This specification defines the semantics of each function and provides an ontology for integrating time-aware logic into SPARQL queries.
-The ontology relies on the Function Ontology (FnO) <span class="references">[<a href="#ref-5">5</a>]</span> to formally describe the semantics, inputs, and outputs of each function.
+The ontology is defined in Turtle using the Function Ontology (FnO) <span class="references">[<a href="#ref-6">6</a>]</span> to formally describe the semantics, inputs, and outputs of each function.
 FnO provides a reusable and machine-readable vocabulary for specifying function metadata, which is well-suited for describing SPARQL extension functions.
-This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own extension function set using FnO<sup id="fnref:GeoSPARQLFunctions"><a href="#fn:GeoSPARQLFunctions" class="footnote" rel="footnote" role="doc-noteref">4</a></sup>.
-By adopting the same method, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.</p>
+This approach aligns with best practices in the Semantic Web community and mirrors how the GeoSPARQL specification defines its own function set using FnO.<sup id="fnref:GeoSPARQLFunctions"><a href="#fn:GeoSPARQLFunctions" class="footnote" rel="footnote" role="doc-noteref">3</a></sup>
+By adopting the same methodology, the Time Functions can be consistently documented, discovered, and potentially reused by other tools and specifications.</p>
 
         <h3 id="motivation-and-design">Motivation and Design</h3>
 
-        <p>Time Functions treats all partial and floating temporal literals as time intervals.
+        <p>The key idea behind Time Functions is to treat all temporal literals as representations of time intervals.
 Each literal is interpreted as the range of time it could plausibly represent, defined by its earliest and latest possible interpretations.
 For instance, a literal like <code>"2025-08"^^xsd:gYearMonth</code> can be understood as spanning from the start of August 1st (<code>"2025-08-01T00:00:00-14:00"^^xsd:dateTime</code>) to the end of August 31st (<code>"2025-08-31T23:59:59+14:00"^^xsd:dateTime</code>).
-Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">W3C XML Schema Recommendation</a> <span class="references">[<a href="#ref-3">3</a>]</span> to consider the full ±14:00 hour range, rather than a fixed default like UTC.</p>
+Floating date-time values, which lack explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">W3C Recommendation</a> <span class="references">[<a href="#ref-4">4</a>]</span> to consider the full ±14:00 hour range, rather than a fixed default like UTC.</p>
 
         <p>By shifting from point-based to interval-based reasoning, these functions enable meaningful comparisons across data types, handle ambiguities introduced by missing time zones or precision, and make temporal filtering in SPARQL more reliable and consistent.</p>
 
@@ -137,12 +137,12 @@ Floating date-time values, without explicit time zone information, are interpret
           <li><strong>time-fn:periodMaxInclusive(?timeLiteral)</strong>: Returns the inclusive upper bound of the time period represented by the given temporal literal.</li>
           <li><strong>time-fn:periodMinExclusive(?timeLiteral)</strong>: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic.</li>
           <li><strong>time-fn:periodMaxExclusive(?timeLiteral)</strong>: Returns the exclusive upper bound of the time period.</li>
-          <li><strong>time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given floating <code>xsd:dateTime</code> literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
-The function aligns with the approach proposed in <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">Working with Time and Timezones</a> <span class="references">[<a href="#ref-2">2</a>]</span>, which recommends interpreting floating times as UTC by default.
+          <li><strong>time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given <code>xsd:dateTime</code> literal without a time zone (i.e., a floating time), this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
+The function aligns with the approach proposed in <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span>, which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
 Nevertheless, the function enables binding a default time zone retrieved dynamically from the dataset itself.
-For example, a SERVICE clause may be used to ensure that the time zone is sourced from the same dataset or endpoint as the time literal, preserving consistency within federated queries. <span style="color: red">JR: This last paragraph is not very clear to me. How do you dynamically retrieve the default timezone from the dataset? Also, do you mean that one can selectively apply the default timezone function using the SERVICE clause? In any case, maybe it is a good idea to showcase this the demo below?</span></li>
+For example, a SERVICE clause may be used to ensure that the time zone is sourced from the same dataset or endpoint as the time literal, preserving consistency within federated queries.</li>
         </ul>
 
         <h3 id="use-cases">Use Cases</h3>
@@ -164,25 +164,18 @@ This is particularly useful in knowledge graphs where schema constraints are loo
         <p>To illustrate the practical utility of the Time Functions, we developed an online demo application, available at <a href="https://smessie.github.io/TimeFunctions-SPARQL-Editor/">https:/​/​smessie.github.io/TimeFunctions-SPARQL-Editor/</a>.
 The application is a lightweight SPARQL query editor that allows users to experiment interactively with the Time Functions described in <a href="#functions">Section 2</a>.</p>
 
-        <p>Users can write and execute SPARQL queries, demonstrating how the Time Functions can address limitations in standard SPARQL when comparing partial or floating time literals.
-Under the hood, the demo runs on the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://comunica.github.io/Article-ISWC2018-Resource/">Comunica query engine</a> <span class="references">[<a href="#ref-6">6</a>]</span>, which has been extended <span style="color: red">JR: Can we add a link to the source code of this extension?</span> to support these custom SPARQL extension functions.
-The query interface itself is powered by the open-source YASQE editor<sup id="fnref:Yasqe"><a href="#fn:Yasqe" class="footnote" rel="footnote" role="doc-noteref">5</a></sup>, which offers features such as syntax highlighting and autocompletion.</p>
+        <p>Users can write SPARQL queries and immediately view the results, demonstrating how the Time Functions can address limitations in standard SPARQL when comparing partial or floating time literals.
+Under the hood, the demo runs on the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://comunica.github.io/Article-ISWC2018-Resource/">Comunica query engine</a> <span class="references">[<a href="#ref-7">7</a>]</span>, which has been extended to support these custom SPARQL extension functions.
+The query interface itself is powered by the open-source YASQE editor<sup id="fnref:Yasqe"><a href="#fn:Yasqe" class="footnote" rel="footnote" role="doc-noteref">4</a></sup>, which offers features such as syntax highlighting and autocompletion.</p>
 
-        <figure class="screen-only">
- <iframe src="https://smessie.github.io/TimeFunctions-SPARQL-Editor/" style="width: 100%; height: 100vh;"></iframe>
- <figcaption>
-            <p>Demo app with example SPARQL queries that demonstrate the use of the proposed Time Functions.</p>
-          </figcaption>
-</figure>
-
-        <figure id="fig:default-query" class="halfwidth printonly">
+        <figure id="fig:default-query" class="halfwidth">
  <img src="img/demo-default-query.png" alt="[Demo app with default query comparing an `xsd:date` to an `xsd:dateTime` yielding no results.]" />
  <figcaption>
             <p><span class="label">Fig. 1:</span> Demo app with default query comparing an <code>xsd:date</code> to an <code>xsd:dateTime</code> yielding no results.</p>
           </figcaption>
 </figure>
 
-        <figure id="fig:rewritten-query" class="halfwidth right printonly">
+        <figure id="fig:rewritten-query" class="halfwidth right">
  <img src="img/demo-rewritten-query.png" alt="[Demo app with query using Time Functions to compare an `xsd:date` to an `xsd:dateTime`, yielding expected results.]" />
  <figcaption>
             <p><span class="label">Fig. 2:</span> Demo app with query using Time Functions to compare an <code>xsd:date</code> to an <code>xsd:dateTime</code>, yielding expected results.</p>
@@ -191,9 +184,9 @@ The query interface itself is powered by the open-source YASQE editor<sup id="fn
 
         <p>The application includes example queries that highlight common pitfalls when working with time literals in SPARQL, as well as how the Time Functions can be used to resolve them.
 Figure 1 shows a screenshot of the demo with a query that compares an <code>xsd:date</code> to an <code>xsd:dateTime</code>.
-Since SPARQL does not support comparisons between these types, the query yields no results—even though the date components are logically comparable.
+Since SPARQL does not support comparisons between these types, the query yields no results—even though the date components are equivalent.
 In Figure 2, the same query is rewritten using the Time Functions to map both literals to their corresponding time intervals.
-This allows for a meaningful comparison, and the query returns the expected result. <span style="color: red">JR: The demo implementation has 2 predefined queries: 1 reflecting the query in Figure 1 and another query to Wikidata for athlets’ birthdays that does not use the time functions. Can we add at least the example shown in Figure 2 as a predefined query? Ideally, we could have an example of each of the use cases mentioned in section 2.3. (I tried to add them myself but the repo seems to be private)</span></p>
+This allows for a meaningful comparison, and the query returns the expected result.</p>
 
       </div>
 </section>
@@ -202,17 +195,19 @@ This allows for a meaningful comparison, and the query returns the expected resu
 <div datatype="rdf:HTML" property="schema:description">
         <h2 property="schema:name">Conclusion</h2>
 
-        <p>In this paper we have highlighted an important gap in the current processing of SPARQL queries dealing with temporal data, that include the inability to directly compare logically comparable datatypes such as <code>xsd:date</code> and <code>xsd:dateTime</code>; and potential ambiguity when dealing with floating time literal, especially in federated or heterogeneous data settings.
-Moreover, current data modeling practices further complicate temporal reasoning: for instance, Wikidata represents imprecise time periods such as “27th century BCE” using a single <code>xsd:dateTime</code> literal (e.g., “-2650-01-01T00:00:00Z”), thereby flattening a broad time range into a misleading instant.
+        <p>Temporal data is pervasive on the Semantic Web, yet SPARQL currently lacks the expressive capabilities needed to correctly compare and reason over partial and floating time literals.
+One common issue is the inability to compare values like <code>xsd:date</code> and <code>xsd:dateTime</code> directly—despite them potentially representing the same calendar day—because SPARQL requires operands to be of the same datatype.
+Separately, data modeling practices further complicate temporal reasoning: for instance, Wikidata represents imprecise time periods such as “27th century BCE” using a single <code>xsd:dateTime</code> literal (e.g., “-2650-01-01T00:00:00Z”), thereby flattening a broad time range into a misleading instant.
+Likewise, floating time literals without explicit time zones make comparisons and sorting ambiguous, especially in federated or heterogeneous data settings.
 These challenges highlight a broader need for improved temporal data publishing practices: data should be expressed using accurate data types that reflect temporal granularity, and time zones should be made explicit wherever possible to avoid implicit and potentially conflicting assumptions.</p>
 
-        <p>To address these limitations, we proposed a set of SPARQL extension functions, <strong>Time Functions</strong>, which reinterpret time literals as time intervals, enabling consistent and type-agnostic comparisons.
+        <p>To address these limitations, this paper proposed a set of SPARQL extension functions, <strong>Time Functions</strong>, which reinterpret time literals as time intervals, enabling consistent and type-agnostic comparisons.
 These functions support partial dates, floating times, and even cross-type comparisons by interpreting each time literal as a bounded interval, which can then be compared meaningfully using SPARQL.
 Additionally, a function for binding a default time zone enables explicit handling of floating times in a configurable way.
-These functions are formally specified using FnO, following established practices such as those in GeoSPARQL, and are implemented in a demo application using the Comunica query engine.
-Our demonstrator provides an interactive environment to explore the functions in action and illustrates how they resolve common pitfalls in temporal querying.</p>
+These functions are formally specified using the Function Ontology (FnO), following established practices such as those in GeoSPARQL, and are implemented in a demo application using the Comunica query engine.
+The demo provides an interactive environment to explore the functions in action and illustrates how they resolve common pitfalls in temporal querying.</p>
 
-        <p>While the functions offer an immediate and practical solution, they are also intended to contribute to the broader discussion around improving temporal reasoning in the upcoming SPARQL 1.2 and beyond.
+        <p>While the functions offer an immediate and practical solution, they are also intended to contribute to the broader discussion around improving temporal reasoning in SPARQL 1.2 and beyond.
 By surfacing the challenges and demonstrating a viable path forward, we hope this work sparks further standardization efforts and community feedback.</p>
 
       </div>
@@ -229,9 +224,6 @@ By surfacing the challenges and demonstrating a viable path forward, we hope thi
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:rdf11">
-      <p><a href="https://www.w3.org/TR/rdf11-concepts/">https:/​/​www.w3.org/TR/rdf11-concepts/</a> <a href="#fnref:rdf11" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
     <li id="fn:IssueImplicitTimeZoneComparisonSorting">
       <p><a href="https://github.com/w3c/sparql-query/issues/116">https:/​/​github.com/w3c/sparql-query/issues/116</a> <a href="#fnref:IssueImplicitTimeZoneComparisonSorting" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
@@ -254,16 +246,18 @@ By surfacing the challenges and demonstrating a viable path forward, we hope thi
 <h2 id="references">References</h2>
 <dl class="references">
   <dt id="ref-1">[1]</dt>
-  <dd resource="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/" typeof="schema:CreativeWork">Harris, S., Seaborne, A.: SPARQL 1.1 Query Language. <a href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/">https:/​/​www.w3.org/TR/2013/REC-sparql11-query-20130321/</a> (2013).</dd>
+  <dd resource="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/" typeof="schema:CreativeWork">Cyganiak, R., Wood, D., Lanthaler, M.: RDF 1.1 Concepts and Abstract Syntax. <a href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">https:/​/​www.w3.org/TR/2025/WD-rdf12-concepts-20250704/</a> (2014).</dd>
   <dt id="ref-2">[2]</dt>
-  <dd resource="https://www.w3.org/TR/timezone/" typeof="schema:CreativeWork">Phillips, A.: Working with Time and Timezones. <a href="https://www.w3.org/TR/timezone/">https:/​/​www.w3.org/TR/timezone/</a> (2024).</dd>
+  <dd resource="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping" typeof="schema:CreativeWork">Harris, S., Seaborne, A.: SPARQL 1.1 Query Language. <a href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping">https:/​/​www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping</a> (2013).</dd>
   <dt id="ref-3">[3]</dt>
-  <dd resource="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/" typeof="schema:CreativeWork">V. Biron, P., Malhotra, A.: XML Schema Part 2: Datatypes Second Edition. <a href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">https:/​/​www.w3.org/TR/2004/REC-xmlschema-2-20041028/</a> (2004).</dd>
+  <dd resource="https://www.w3.org/TR/timezone/" typeof="schema:CreativeWork">Phillips, A.: Working with Time and Timezones. <a href="https://www.w3.org/TR/timezone/">https:/​/​www.w3.org/TR/timezone/</a> (2024).</dd>
   <dt id="ref-4">[4]</dt>
-  <dd resource="#soulard2025explainable" typeof="schema:Article">Soulard, T., Saı̈s Fatiha, Raad, J.: Explainable Temporal Fact Validation Through Constraints Discovery in Knowledge Graphs. In: European Semantic Web Conference. pp. 227–244. Springer (2025).</dd>
+  <dd resource="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/" typeof="schema:CreativeWork">V. Biron, P., Malhotra, A.: XML Schema Part 2: Datatypes Second Edition. <a href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">https:/​/​www.w3.org/TR/2004/REC-xmlschema-2-20041028/</a> (2004).</dd>
   <dt id="ref-5">[5]</dt>
-  <dd resource="#de2016ontology" typeof="schema:Article">De Meester, B., Dimou, A., Verborgh, R., Mannens, E.: An ontology to semantically declare and describe functions. In: European Semantic Web Conference. pp. 46–49. Springer (2016).</dd>
+  <dd resource="#soulard2025explainable" typeof="schema:Article">Soulard, T., Saı̈s Fatiha, Raad, J.: Explainable Temporal Fact Validation Through Constraints Discovery in Knowledge Graphs. In: European Semantic Web Conference. pp. 227–244. Springer (2025).</dd>
   <dt id="ref-6">[6]</dt>
+  <dd resource="#de2016ontology" typeof="schema:Article">De Meester, B., Dimou, A., Verborgh, R., Mannens, E.: An ontology to semantically declare and describe functions. In: European Semantic Web Conference. pp. 46–49. Springer (2016).</dd>
+  <dt id="ref-7">[7]</dt>
   <dd resource="https://comunica.github.io/Article-ISWC2018-Resource/" typeof="schema:Article">Taelman, R., Van Herwegen, J., Vander Sande, M., Verborgh, R.: Comunica: a Modular SPARQL Query Engine for the Web. In: Proceedings of the 17th International Semantic Web Conference (2018).</dd>
 </dl>
 </section>
