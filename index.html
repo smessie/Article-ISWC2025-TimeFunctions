@@ -133,11 +133,11 @@ Floating date-time values, without explicit time zone information, are interpret
         <p>The current Time Functions include five core functions:</p>
 
         <ul>
-          <li><strong>time-fn:periodMinInclusive(?timeLiteral)</strong>: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an <code>xsd:dateTime</code>.</li>
-          <li><strong>time-fn:periodMaxInclusive(?timeLiteral)</strong>: Returns the inclusive upper bound of the time period represented by the given temporal literal.</li>
-          <li><strong>time-fn:periodMinExclusive(?timeLiteral)</strong>: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic.</li>
-          <li><strong>time-fn:periodMaxExclusive(?timeLiteral)</strong>: Returns the exclusive upper bound of the time period.</li>
-          <li><strong>time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given floating <code>xsd:dateTime</code> literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged.
+          <li><strong>time-fn:periodMinInclusive(?timeLiteral)</strong>: Returns the inclusive lower bound of the time period represented by the given temporal literal, as an <code>xsd:dateTime</code>. For example, for <code>"2025-08"^^xsd:gYearMonth</code>, it returns <code>"2025-08-01T00:00:00.000+14:00"^^xsd:dateTime</code>.</li>
+          <li><strong>time-fn:periodMaxInclusive(?timeLiteral)</strong>: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns <code>"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime</code>.</li>
+          <li><strong>time-fn:periodMinExclusive(?timeLiteral)</strong>: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns <code>"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime</code>.</li>
+          <li><strong>time-fn:periodMaxExclusive(?timeLiteral)</strong>: Returns the exclusive upper bound of the time period. For the same example, it returns <code>"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime</code>.</li>
+          <li><strong>time-fn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given floating <code>xsd:dateTime</code> literal, this function returns a new literal with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns <code>"2025-08+02:00"^^xsd:gYearMonth</code> when bound to the <code>+02:00</code> time zone.
 The function aligns with the approach proposed in <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span>, which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
