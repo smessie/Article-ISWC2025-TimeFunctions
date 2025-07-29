@@ -5,7 +5,7 @@ Temporal literals are common in many datasets on the Semantic Web.
 SPARQL, the standard query language for RDF, is frequently used to query, filter, and compare such temporal information.
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to *partial time literals* (e.g., `xsd:gYear`, `xsd:gYearMonth`, `xsd:date`) and *floating times* (i.e., time literals without explicit time zones).
 
-Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) defines comparison semantics only for literals of the same data type.
+Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) define comparison semantics only for literals of the same data type.
 Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.
 
 This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
@@ -34,6 +34,6 @@ This paper aims to highlight these overlooked issues and present a concrete, ext
 We propose a set of SPARQL extension functions—called *Time Functions*—that enable comparison across different temporal data types, interpretation of floating and partial times as intervals, and consistent and explainable time-based filtering and sorting.
 
 The remainder of this paper is structured as follows.
-Section 2 introduces the proposed SPARQL extension functions for time handling, along with their formal semantics.
-Subsequently, Section 3 presents a demo application showcasing how these functions enable richer and more accurate temporal queries over RDF data.
-Finally, Section 4 concludes with a discussion of how Time Functions address the limitations of SPARQL for temporal reasoning, highlights their relevance for future standardization, and encourages improved temporal data publishing practices.
+[](#functions) introduces the proposed SPARQL extension functions for time handling, along with their formal semantics.
+Subsequently, [](#demo) presents a demo application showcasing how these functions enable richer and more accurate temporal queries over RDF data.
+Finally, [](#conclusion) concludes with a discussion of how Time Functions address the limitations of SPARQL for temporal reasoning, highlights their relevance for future standardization, and encourages improved temporal data publishing practices.
