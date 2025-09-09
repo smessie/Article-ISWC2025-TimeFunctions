@@ -12,7 +12,7 @@
   <meta name="citation_author" content="Julián Rojas Meléndez" />
   <meta name="citation_author" content="Pieter Colpaert" />
   
-  <meta name="citation_publication_date" content="2025/07/30" />
+  <meta name="citation_publication_date" content="2025/09/09" />
 </head>
 
 <body prefix="dctypes: http://purl.org/dc/dcmitype/ pimspace: http://www.w3.org/ns/pim/space# rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ solid: http://www.w3.org/ns/solid/terms# acl: http://www.w3.org/ns/auth/acl# dio: https://w3id.org/dio# lsc: http://linkedscience.org/lsc/ns#" typeof="schema:CreativeWork sioc:Post prov:Entity lsc:Research">
@@ -73,7 +73,7 @@ SPARQL, the standard query language for RDF, is frequently used to query, filter
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to <em>partial time literals</em> (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, <code>xsd:date</code>) and <em>floating times</em> (i.e., time literals without explicit time zones).</p>
 
         <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">the RDF 1.1 standard</a> <span class="references">[<a href="#ref-1">1</a>]</span> recommends the use of various built-in XML Schema temporal data types (e.g., <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>), the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping">operator mappings from SPARQL 1.1</a> <span class="references">[<a href="#ref-2">2</a>]</span> define comparison semantics only for literals of the same data type.
-Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.</p>
+Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.</p>
 
         <p>This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
 Its SPARQL endpoint, however, returns fully qualified <code>xsd:dateTime</code> values without indicating the original precision.
@@ -91,7 +91,7 @@ For example, a floating time can be represented by the time interval it could oc
 This perspective enables meaningful comparison between floating, partial, and fully-qualified time literals by aligning them to their temporal bounds rather than requiring exact matches.</p>
 
         <p>Despite the growing interest in temporal reasoning on knowledge graphs, e.g., in works such as Soulard et al. 2025 <span class="references">[<a href="#ref-5">5</a>]</span>, issues around time zones and floating times are rarely addressed explicitly.
-Moreover, while improvement proposals like SEP-0002<sup id="fnref:SEP-0002"><a href="#fn:SEP-0002" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.</p>
+Moreover, while enhancement proposals like SEP-0002<sup id="fnref:SEP-0002"><a href="#fn:SEP-0002" class="footnote" rel="footnote" role="doc-noteref">2</a></sup> improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.</p>
 
         <p>This paper aims to highlight these overlooked issues and present a concrete, extensible solution.
 We propose a set of SPARQL extension functions—called <em>Time Functions</em>—that enable comparison across different temporal data types, interpretation of floating and partial times as intervals, and consistent and explainable time-based filtering and sorting.</p>
@@ -123,7 +123,7 @@ By adopting this method, the Time Functions can be consistently documented, disc
 
         <p>Time Functions treats all temporal literals as time intervals, interpreted as the range of time they could represent based on their earliest and latest possible interpretations. 
 For instance, a literal <code>"2025-08"^^xsd:gYearMonth</code> spans from August 1st (<code>"2025-08-01T00:00:00-14:00"^^xsd:dateTime</code>) to August 31st (<code>"2025-08-31T23:59:59+14:00"^^xsd:dateTime</code>).
-Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">W3C XML Schema Recommendation</a> <span class="references">[<a href="#ref-4">4</a>]</span> to consider the full ±14:00 hour range, rather than a fixed default like UTC.</p>
+As discussed in <a href="#introduction">Section 1</a>, the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2004/REC-xmlschema-2-20041028/">W3C XML Schema Recommendation</a> <span class="references">[<a href="#ref-4">4</a>]</span> is followed to interpret floating date-time values as intervals that encompass all possible time zone offsets, using the full ±14:00 hour range, rather than defaulting to a specific time zone like UTC.</p>
 
         <p>By shifting from point-based to interval-based reasoning, these functions enable meaningful comparisons across data types, handle ambiguities introduced by missing time zones or precision, and make temporal filtering in SPARQL more reliable and consistent.</p>
 
@@ -136,7 +136,7 @@ Floating date-time values, without explicit time zone information, are interpret
           <li><strong>tfn:periodMaxInclusive(?timeLiteral)</strong>: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns <code>"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime</code>.</li>
           <li><strong>tfn:periodMinExclusive(?timeLiteral)</strong>: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns <code>"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime</code>.</li>
           <li><strong>tfn:periodMaxExclusive(?timeLiteral)</strong>: Returns the exclusive upper bound of the time period. For the same example, it returns <code>"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime</code>.</li>
-          <li><strong>tfn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given floating time literal, this function returns a new literal of the same type with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns <code>"2025-08+02:00"^^xsd:gYearMonth</code> when bound to the <code>+02:00</code> time zone.
+          <li><strong>tfn:bindDefaultTimezone(?timeLiteral, ?timeZone)</strong>: For a given floating time literal, this function returns a new literal of the same type with the specified time zone bound. If the literal already includes a time zone, no default time zone needs to be bound to it, and it is returned unchanged. For the same example, it returns <code>"2025-08+02:00"^^xsd:gYearMonth</code> when bound to the <code>+02:00</code> time zone.
 The function aligns with the approach proposed in <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/timezone/">Working with Time and Timezones</a> <span class="references">[<a href="#ref-3">3</a>]</span>, which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.
@@ -260,6 +260,15 @@ By surfacing the challenges and demonstrating a viable path forward, we hope thi
     </li>
   </ol>
 </div>
+
+      </div>
+</section>
+
+  <section id="genai" inlist="" rel="schema:hasPart" resource="#genai">
+<div datatype="rdf:HTML" property="schema:description">
+        <h2 property="schema:name">Declaration on Generative AI</h2>
+
+        <p>During the preparation of this work, the author(s) used ChatGPT, DeepL in order to: Grammar and spelling check, Paraphrase and reword. After using this tool/service, the author(s) reviewed and edited the content as needed and take(s) full responsibility for the publication’s content.</p>
 
       </div>
 </section>
