@@ -18,7 +18,7 @@ By adopting this method, the Time Functions can be consistently documented, disc
 
 Time Functions treats all temporal literals as time intervals, interpreted as the range of time they could represent based on their earliest and latest possible interpretations. 
 For instance, a literal `"2025-08"^^xsd:gYearMonth` spans from August 1st (`"2025-08-01T00:00:00-14:00"^^xsd:dateTime`) to August 31st (`"2025-08-31T23:59:59+14:00"^^xsd:dateTime`).
-Floating date-time values, without explicit time zone information, are interpreted as intervals that encompass all possible time zone offsets—following the [W3C XML Schema Recommendation](cite:cites v_biron_xml_2004) to consider the full ±14:00 hour range, rather than a fixed default like UTC.
+As discussed in [](#introduction), the [W3C XML Schema Recommendation](cite:cites v_biron_xml_2004) is followed to interpret floating date-time values as intervals that encompass all possible time zone offsets, using the full ±14:00 hour range, rather than defaulting to a specific time zone like UTC.
 
 By shifting from point-based to interval-based reasoning, these functions enable meaningful comparisons across data types, handle ambiguities introduced by missing time zones or precision, and make temporal filtering in SPARQL more reliable and consistent.
 
@@ -31,7 +31,7 @@ The current Time Functions include five core functions:
 - **tfn:periodMaxInclusive(?timeLiteral)**: Returns the inclusive upper bound of the time period represented by the given temporal literal. For the same example, it returns `"2025-08-31T23:59:59.999-14:00"^^xsd:dateTime`.
 - **tfn:periodMinExclusive(?timeLiteral)**: Returns the exclusive lower bound of the time period. This is particularly useful for defining open-ended or non-overlapping intervals in filtering logic. For the same example, it returns `"2025-07-31T23:59:59.999+14:00"^^xsd:dateTime`.
 - **tfn:periodMaxExclusive(?timeLiteral)**: Returns the exclusive upper bound of the time period. For the same example, it returns `"2025-09-01T00:00:00.000-14:00"^^xsd:dateTime`.
-- **tfn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating time literal, this function returns a new literal of the same type with the specified time zone bound. If the literal already includes a time zone, it is returned unchanged. For the same example, it returns `"2025-08+02:00"^^xsd:gYearMonth` when bound to the `+02:00` time zone.
+- **tfn:bindDefaultTimezone(?timeLiteral, ?timeZone)**: For a given floating time literal, this function returns a new literal of the same type with the specified time zone bound. If the literal already includes a time zone, no default time zone needs to be bound to it, and it is returned unchanged. For the same example, it returns `"2025-08+02:00"^^xsd:gYearMonth` when bound to the `+02:00` time zone.
 The function aligns with the approach proposed in [Working with Time and Timezones](cite:cites phillips_working_2024), which recommends interpreting floating times as UTC by default.
 However, it also supports more flexible, context-specific interpretations by allowing users to explicitly specify an alternative time zone.
 Caution is advised when applying this function across data from heterogeneous sources, as there is no universally correct default time zone.

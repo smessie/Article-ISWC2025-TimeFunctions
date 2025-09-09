@@ -6,7 +6,7 @@ SPARQL, the standard query language for RDF, is frequently used to query, filter
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to *partial time literals* (e.g., `xsd:gYear`, `xsd:gYearMonth`, `xsd:date`) and *floating times* (i.e., time literals without explicit time zones).
 
 Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) define comparison semantics only for literals of the same data type.
-Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are logically comparable.
+Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.
 
 This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
 Its SPARQL endpoint, however, returns fully qualified `xsd:dateTime` values without indicating the original precision.
@@ -26,7 +26,7 @@ For example, a floating time can be represented by the time interval it could oc
 This perspective enables meaningful comparison between floating, partial, and fully-qualified time literals by aligning them to their temporal bounds rather than requiring exact matches.
 
 Despite the growing interest in temporal reasoning on knowledge graphs, e.g., in works such as [Soulard et al. 2025](cite:cites soulard2025explainable), issues around time zones and floating times are rarely addressed explicitly.
-Moreover, while improvement proposals like SEP-0002[^SEP-0002] improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.
+Moreover, while enhancement proposals like SEP-0002[^SEP-0002] improve SPARQL’s handling of date-time arithmetic, they do not cover cross-type comparison or floating time semantics.
 
 [^SEP-0002]: [https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md](https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md)
 
