@@ -44,3 +44,8 @@ The remainder of this paper is structured as follows.
 [](#functions) introduces the proposed SPARQL extension functions for time handling, along with their formal semantics.
 Subsequently, [](#demo) presents a demo application showcasing how these functions enable richer and more accurate temporal queries over RDF data.
 Finally, [](#conclusion) concludes with a discussion of how Time Functions address the limitations of SPARQL for temporal reasoning, highlights their relevance for future standardization, and encourages improved temporal data publishing practices.
+
+<span class="placeholder printonly">
+<span style="display: block; height: 2em;"></span>
+<!-- This is a dummy placeholder -->
+</span>
