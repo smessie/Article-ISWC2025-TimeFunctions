@@ -4,7 +4,7 @@ gem 'nanoc', '~> 4.7'
 
 gem 'csv' # To avoid warning on Ruby 3.4+
 
-gem 'scholarmarkdown'
+gem 'scholarmarkdown', '>= 3.5.0'
 
 # text processing
 gem 'kramdown'
