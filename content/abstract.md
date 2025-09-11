@@ -31,7 +31,7 @@ floating times
 <span class="printonly firstpagefooter">
 <span class="firstpagefootertop">&nbsp;</span>
 <span class="footnotecopyright">
-<span style="font-style:italic">Posters, Demos, and Industry Tracks at ISWC 2025, November 2--6, 2024, Nara, Japan</span><br />
+<span style="font-style:italic">ISWC 2025 Companion Volume, November 2--6, 2025, Nara, Japan</span><br />
 <img src="img/mail.png" width="12px" style="vertical-align: -2px;" /> <a href="mailto:ieben.smessaert@ugent.be">ieben.smessaert@ugent.be</a> (I. Smessaert); <a href="mailto:julianandres.rojasmelendez@ugent.be">julianandres.rojasmelendez@ugent.be</a> (J. Rojas); <a href="mailto:pieter.colpaert@ugent.be">pieter.colpaert@ugent.be</a> (P. Colpaert)<br />
 <img src="img/orcid.svg" width="12px" style="vertical-align: -2px;" /> <a href="https://orcid.org/0009-0004-5281-0723">0009-0004-5281-0723</a> (I. Smessaert); <a href="https://orcid.org/0000-0002-6645-1264">0000-0002-6645-1264</a> (J. Rojas); <a href="https://orcid.org/0000-0001-6917-2167">0000-0001-6917-2167</a> (P. Colpaert)<br />
 <img src="img/cc-by.png" width="50px" style="vertical-align: middle;" /><span style="font-size: 0.75em">&ensp;© 2025 Copyright for this paper by its authors. Use permitted under Creative Commons License Attribution 4.0 International (CC BY 4.0).</span><br />
