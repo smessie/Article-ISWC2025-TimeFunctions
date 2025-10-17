@@ -12,7 +12,7 @@
   <meta name="citation_author" content="Julián, Rojas Meléndez" />
   <meta name="citation_author" content="Pieter, Colpaert" />
   
-  <meta name="citation_publication_date" content="2025/09/11" />
+  <meta name="citation_publication_date" content="2025/10/17" />
 </head>
 
 <body prefix="dctypes: http://purl.org/dc/dcmitype/ pimspace: http://www.w3.org/ns/pim/space# rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ solid: http://www.w3.org/ns/solid/terms# acl: http://www.w3.org/ns/auth/acl# dio: https://w3id.org/dio# lsc: http://linkedscience.org/lsc/ns#" typeof="schema:CreativeWork sioc:Post prov:Entity lsc:Research">
@@ -96,14 +96,12 @@ SPARQL, the standard query language for RDF, is frequently used to query, filter
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to <em>partial time literals</em> (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, <code>xsd:date</code>) and <em>floating times</em> (i.e., time literals without explicit time zones).</p>
 
         <p>Although <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2025/WD-rdf12-concepts-20250704/">the RDF 1.1 standard</a> <span class="references">[<a href="#ref-1">1</a>]</span> recommends the use of various built-in XML Schema temporal data types (e.g., <code>xsd:dateTime</code>, <code>xsd:date</code>, and <code>xsd:gYearMonth</code>), the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#OperatorMapping">operator mappings from SPARQL 1.1</a> <span class="references">[<a href="#ref-2">2</a>]</span> define comparison semantics only for literals of the same data type.
-Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines and</p>
-
-        <p><span class="placeholder printonly">
+Cross-datatype comparisons (e.g., comparing an <code>xsd:date</code> with an <code>xsd:dateTime</code>) are not defined, and existing SPARQL engines
+<span class="placeholder printonly">
 <span style="display: block; height: 12em;"></span>
 <!-- This is a dummy placeholder -->
-</span></p>
-
-        <p>querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.</p>
+</span>
+and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.</p>
 
         <p>This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
 Its SPARQL endpoint, however, returns fully qualified <code>xsd:dateTime</code> values without indicating the original precision.
