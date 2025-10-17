@@ -12,12 +12,27 @@ header {
   display: none;
 }
 
+
+@font-face {
+  font-family: 'Libertinus Sans';
+  src: url('../fonts/LibertinusSans-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Libertinus Sans' !important;
+}
+
+
 // Custom css for the figures in the printed version
 .halfwidth {
-  width: 45%;
+  width: 50%;
   float: left;
-  margin-left: 1em;
-  margin-right: 1em;
+  figcaption {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
 }
 
 .right {

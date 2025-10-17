@@ -6,14 +6,12 @@ SPARQL, the standard query language for RDF, is frequently used to query, filter
 However, current support for comparing and reasoning over time-related literals in SPARQL is limited, especially when it comes to *partial time literals* (e.g., `xsd:gYear`, `xsd:gYearMonth`, `xsd:date`) and *floating times* (i.e., time literals without explicit time zones).
 
 Although [the RDF 1.1 standard](cite:cites cyganiak_rdf_2014) recommends the use of various built-in XML Schema temporal data types (e.g., `xsd:dateTime`, `xsd:date`, and `xsd:gYearMonth`), the [operator mappings from SPARQL 1.1](cite:cites harris_sparql_2013) define comparison semantics only for literals of the same data type.
-Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines and
-
+Cross-datatype comparisons (e.g., comparing an `xsd:date` with an `xsd:dateTime`) are not defined, and existing SPARQL engines
 <span class="placeholder printonly">
 <span style="display: block; height: 12em;"></span>
 <!-- This is a dummy placeholder -->
 </span>
-
-querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.
+and querying frameworks such as Virtuoso, BlazeGraph, and Comunica return false or empty results in these cases, even if the date parts of the literals are comparable.
 
 This issue becomes problematic in large-scale, real-world knowledge graphs like Wikidata, where users can specify date precision (e.g., year, month, day) when entering temporal data.
 Its SPARQL endpoint, however, returns fully qualified `xsd:dateTime` values without indicating the original precision.
